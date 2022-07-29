@@ -1,18 +1,19 @@
 import { Component } from 'react';
 import Card from './card';
+import WeatherApiService from '../services/weatherApiService';
 
 export default class welcome extends Component {
 	constructor(props) {
 		super(props);
-		console.log(props);
 		this.state = {
 			user: props.user,
 			searchTerm: ''
 		};
 		this.onSubmit = function (e) {
 			e.preventDefault();
-			props.search(me.state.searchTerm);
-		};
+			//TODO: implement minimum character count for search string 
+			WeatherApiService.search(this.state.searchTerm);
+		}.bind(this);
 
 		this.handleChangeValue = function (e) {
 			let stateUpdate = {};
