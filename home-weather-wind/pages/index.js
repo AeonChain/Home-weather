@@ -2,25 +2,9 @@ import { Component } from 'react';
 import Welcome from '../components/welcome';
 import SelectProfile from '../components/select-profile';
 import Dashboard from '../components/dashboard';
-
-// export default function Home() {
-// 	let Users = useState();
-// 	const hasData = false;
-// 	return (
-// 		<GetComponent hasData={hasData} />
-// 	);
-// }
-
-class User {
-	constructor(name) {
-		this.name = name;
-		this.favourites = [];
-	}
-
-	addFavourite(location) {
-		this.favourites.push(location);
-	}
-}
+import Loading from '../components/loading';
+import userManager from '../services/userManagerService';
+import User from '../models/user';
 
 export default class Home extends Component {
 	constructor(props) {
@@ -29,18 +13,32 @@ export default class Home extends Component {
 			users: [],
 			hasUsers: false,
 			loggedInUser: '',
-			loggedIn: false
+			loggedIn: false,
+			waitingForApiData: true
 		};
 		this.handleWelcomeSubmit = this.handleWelcomeSubmit.bind(this);
 		this.handleProfileSelected = this.handleProfileSelected.bind(this);
 	}
 
-	handleWelcomeSubmit(formState) {
-		this.setState({ users: [...this.state.users, new User(formState.name)], hasUsers: true });
+	componentDidMount() {
+		userManager.getUsers()
+			.then(res => {
+				let newState = { waitingForApiData: false };
+				if (res) {
+					newState.users = res;
+				}
+				this.setState(newState);
+			})
+			.catch(err => console.log(err));
+	}
+
+	async handleWelcomeSubmit(formState) {
+		const newUser = new User({ name: formState.name });
+		const newUsers = await userManager.addUser(newUser);
+		this.setState({ users: newUsers, hasUsers: true });
 	}
 
 	handleProfileSelected(index) {
-
 		if (this.state.users[index]) {
 			this.setState({ loggedInUser: this.state.users[index], loggedIn: true });
 		} else {
@@ -50,6 +48,9 @@ export default class Home extends Component {
 
 	render() {
 		const hasUsers = this.state.users.length;
+		if (this.state.waitingForApiData) {
+			return <Loading />;
+		}
 		if (this.state.loggedIn) {
 			return <Dashboard user={this.state.loggedInUser}></Dashboard>;
 		}
