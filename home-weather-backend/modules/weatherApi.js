@@ -6,12 +6,22 @@ module.exports = class Api {
 	constructor(app) {
 		function searchQuery(req, res) {
 			const query = req.body.search || '';
+
 			res.status(200).json(this.searchCities(query));
+		}
+
+		function clearCache(req, res) {
+			//maybe just set all expiries? not sure what we'd use the soft deleted data for however
+			this.cachedCitySearches = {};
+			res.status(200);
 		}
 		app.post('/search_weather', searchQuery.bind(this));
 
+
+
+		app.post('/weather_clear_cache', clearCache.bind(this));
+
 		this.cachedCitySearches = {};
-		this.testingFailsafe = false;
 	}
 
 	searchCities(query) {
@@ -36,7 +46,7 @@ module.exports = class Api {
 					.then(res => res.json(JSON.parse))
 					.then(res => {
 						return res.map((x) => {
-							return { name: x.name, state: x.state, country: x.country };
+							return { name: x.name, state: x.state, country: x.country, lat: x.lat, lon: x.lon };
 						});
 					})
 					.then(cacheResult);

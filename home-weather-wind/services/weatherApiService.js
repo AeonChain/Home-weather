@@ -16,11 +16,6 @@ const weatherApiService = {
 			headers: { 'Content-Type': 'application/json' },
 			body: body
 		}).then(getJson)
-			.then(res => {
-				const results = res;
-				console.log('results', results);
-				return [];
-			})
 			.catch((err) => {
 				//TODO: implement generic global error handler
 				//possibly create something where i can just throw an event and handle else where not in the services

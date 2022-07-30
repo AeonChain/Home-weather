@@ -1,18 +1,22 @@
 import { Component } from 'react';
 import Card from './card';
+import Results from './search-results';
 import WeatherApiService from '../services/weatherApiService';
 
-export default class welcome extends Component {
+export default class Dashboard extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			user: props.user,
-			searchTerm: ''
+			searchTerm: '',
+			searchResults: []
 		};
-		this.onSubmit = function (e) {
+		this.onSubmit = async function (e) {
 			e.preventDefault();
 			//TODO: implement minimum character count for search string 
-			WeatherApiService.search(this.state.searchTerm);
+			const results = await WeatherApiService.search(this.state.searchTerm);
+			console.log("blahhh!", results);
+			this.setState({ searchResults: results });
 		}.bind(this);
 
 		this.handleChangeValue = function (e) {
@@ -29,13 +33,21 @@ export default class welcome extends Component {
 					<h1 className="text-3xl">Welcome {this.state.user.name}</h1>
 				</div>
 			</Card>
-			<Card secondaryCard>
-				<form className="grid place-items-center p-5" onSubmit={this.onSubmit}>
-					<label htmlFor="name">New search</label>
-					<input name="searchTerm" type="textbox" className="text-black" onChange={this.handleChangeValue} ></input>
-					<button className="mt-5 bg-teal-300 rounded p-2 text-slate-900 font-bold">Submit</button>
-				</form>
-			</Card>
+			{this.state.searchResults.length === 0 &&
+				<Card secondaryCard>
+					<form className="grid place-items-center p-5" onSubmit={this.onSubmit}>
+						<label htmlFor="searchTerm">New search</label>
+						<input name="searchTerm" type="textbox" className="text-black" onChange={this.handleChangeValue} ></input>
+						<button className="mt-5 bg-teal-300 rounded p-2 text-slate-900 font-bold">Submit</button>
+					</form>
+				</Card>
+			}
+			{this.state.searchResults.length > 0 &&
+				<div className='grid grid-cols-1 place-items-center divide-y'>
+					<span className='bg-teal-400 rounded px-4 py-2 mb-4'><h2 className='text-xl justify-self-center'>Results</h2></span>
+					<Results results={this.state.searchResults}> </Results>
+				</div>
+			}
 		</div>;
 	};
 }
