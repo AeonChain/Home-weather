@@ -15,7 +15,6 @@ export default class Dashboard extends Component {
 			e.preventDefault();
 			//TODO: implement minimum character count for search string 
 			const results = await WeatherApiService.search(this.state.searchTerm);
-			console.log("blahhh!", results);
 			this.setState({ searchResults: results });
 		}.bind(this);
 
@@ -23,6 +22,10 @@ export default class Dashboard extends Component {
 			let stateUpdate = {};
 			stateUpdate[e.target.name] = e.target.value;
 			this.setState(stateUpdate);
+		}.bind(this);
+
+		this.handleResetToSearch = function (e) {
+			this.setState({ searchResults: [] });
 		}.bind(this);
 	}
 
@@ -44,8 +47,7 @@ export default class Dashboard extends Component {
 			}
 			{this.state.searchResults.length > 0 &&
 				<div className='grid grid-cols-1 place-items-center divide-y'>
-					<span className='bg-teal-400 rounded px-4 py-2 mb-4'><h2 className='text-xl justify-self-center'>Results</h2></span>
-					<Results results={this.state.searchResults}> </Results>
+					<Results results={this.state.searchResults} reset={this.handleResetToSearch}> </Results>
 				</div>
 			}
 		</div>;

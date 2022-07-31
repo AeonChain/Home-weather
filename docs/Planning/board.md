@@ -6,20 +6,21 @@ kanban-plugin: basic
 
 ## Scheduled
 
-- [ ] [[dashboard|dashboard on return]]
 - [ ] [[favourites]]
 - [ ] [[dashboard| dashboard with favourites]]
+- [ ] [[dashboard|dashboard on return]]
 - [ ] Recent searches
 - [ ] Guest user
 
 
 ## Doing
 
-- [ ] Get wind direction and display
+- [ ] BUG: sometimes you have to click items twice, api? going wrong maybe?
 
 
 ## Tested
 
+- [ ] Get wind direction and display
 - [ ] [[search|display search results]]
 - [ ] [[search]]
 - [ ] [[dashboard]]  <br>- [x] get user to set name<br>- [x] save that down,<br>- [x] lead them straight to search
