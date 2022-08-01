@@ -89,7 +89,6 @@ module.exports = class Api {
 				date.setMinutes(date.getMinutes() + 10);
 				const expiry = date;
 				this.cachedDetailQueries[lowerCaseQuery] = {
-					//only interested in wind for now
 					result: result,
 					expiry: expiry
 				};
@@ -97,9 +96,7 @@ module.exports = class Api {
 			}.bind(this);
 			return fetch(weatherApiUrl + `/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`)
 				.then(res => res.json(JSON.parse))
-				.then(res => {
-					return { id: res.id, wind: res.wind, name: res.name };
-				})
+				.then(res => ({ id: res.id, wind: res.wind, name: res.name, coord: res.coord, country: res.sys && res.sys.country }))
 				.then(cacheResult);
 		} else {
 			console.log('using cached query');

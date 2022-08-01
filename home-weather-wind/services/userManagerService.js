@@ -33,7 +33,25 @@ const defaultUserManager = {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: body
-		}).then(res => res.json()).then(res => res.users || []);
+		}).then(getJson)
+			.then(res => {
+				const users = res.users;
+				if (users.map) {
+					let mappedUsers = users.map(element => new User(element));
+					return mappedUsers;
+				}
+				return [];
+			});
+	},
+	updateUser: (user) => {
+		const body = JSON.stringify(user);
+		return fetch('/api/update_user', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: body
+		})
+			.then(getJson)
+			.then(res => new User(res));
 	}
 };
 

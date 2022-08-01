@@ -6,19 +6,19 @@ kanban-plugin: basic
 
 ## Scheduled
 
-- [ ] [[dashboard| dashboard with favourites]]
-- [ ] [[dashboard|dashboard on return]]
-- [ ] Recent searches
 - [ ] Guest user
 
 
 ## Doing
 
-- [ ] [[favourites]]
 
 
 ## Tested
 
+- [ ] Recent searches
+- [ ] [[dashboard|dashboard on return]]
+- [ ] [[favourites]]
+- [ ] [[dashboard| dashboard with favourites]]
 - [ ] BUG: sometimes you have to click items twice, api? going wrong maybe?
 - [ ] Get wind direction and display
 - [ ] [[search|display search results]]

@@ -6,9 +6,6 @@ function getJson(req) {
 		return {};
 	} else {
 		const json = req.json();
-		if (json.then) {
-			return json.then();
-		}
 		return json;
 	}
 }

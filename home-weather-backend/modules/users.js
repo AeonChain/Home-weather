@@ -13,7 +13,7 @@ module.exports = class UserCalls extends SourceJson {
 			//TODO: add check req structure?
 			users.push(req.body);
 			const result = { users: users };
-			await saveFile(result);
+			await super.saveFile(result);
 			res.status(200).json(result);
 		});
 
@@ -22,6 +22,17 @@ module.exports = class UserCalls extends SourceJson {
 			const users = json.users || [];
 			console.log(users);
 			res.status(200).json({ users: users });
+		});
+		app.post('/update_user', async (req, res) => {
+			const json = await super.readFile();
+			const users = json.users || [];
+			const updatedUser = req.body;
+			const index = users.findIndex(x => x.name === updatedUser.name);
+			users[index] = updatedUser;
+			const result = { users: users };
+			await super.saveFile(result);
+			console.log(users[index]);
+			res.status(200).json(users[index]);
 		});
 	}
 };
