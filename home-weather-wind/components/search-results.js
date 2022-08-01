@@ -22,8 +22,7 @@ export default class SearchResults extends Component {
 		}
 
 		weatherApiService.detail(lon, lat)
-			.then(res => this.setState({ selectedResult: res }))
-			.then(res => console.log("done", this));
+			.then(res => this.setState({ selectedResult: res }));
 	}
 
 	goBackToSearch() {

@@ -6,7 +6,6 @@ kanban-plugin: basic
 
 ## Scheduled
 
-- [ ] [[favourites]]
 - [ ] [[dashboard| dashboard with favourites]]
 - [ ] [[dashboard|dashboard on return]]
 - [ ] Recent searches
@@ -15,11 +14,12 @@ kanban-plugin: basic
 
 ## Doing
 
-- [ ] BUG: sometimes you have to click items twice, api? going wrong maybe?
+- [ ] [[favourites]]
 
 
 ## Tested
 
+- [ ] BUG: sometimes you have to click items twice, api? going wrong maybe?
 - [ ] Get wind direction and display
 - [ ] [[search|display search results]]
 - [ ] [[search]]

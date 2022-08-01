@@ -14,8 +14,10 @@ export default class Dashboard extends Component {
 		this.onSubmit = async function (e) {
 			e.preventDefault();
 			//TODO: implement minimum character count for search string 
-			const results = await WeatherApiService.search(this.state.searchTerm);
-			this.setState({ searchResults: results });
+			await WeatherApiService.search(this.state.searchTerm)
+				.then(res => {
+					this.setState({ searchResults: res });
+				});
 		}.bind(this);
 
 		this.handleChangeValue = function (e) {

@@ -4,30 +4,6 @@ const weatherApiUrl = 'http://api.openweathermap.org/';
 
 module.exports = class Api {
 	constructor(app) {
-		async function searchQuery(req, res) {
-			const query = req.body.search || '';
-			let response = this.searchCities(query);
-			if (response.then) {
-				response = await response;
-			} else {
-				res.status(200).json(response);
-			}
-		}
-
-		async function detail(req, res) {
-			const lon = req.body.lon || '';
-			const lat = req.body.lat || '';
-			if (!lon || !lat) {
-				//just return 400(bad request) as data isn't all there
-				res.status(400);
-			}
-			let response = this.weatherForCity(lon, lat);
-			if (response.then) {
-				response = await response;
-			}
-			res.status(200).json(response);
-		}
-
 		function clearCache(req, res) {
 			//maybe just set all expiries? not sure what we'd use the soft deleted data for however
 			console.log("clearing cache");
@@ -35,8 +11,6 @@ module.exports = class Api {
 			this.cachedDetailQueries = {};
 			res.status(200).json({ message: "cacheCleared" });
 		}
-		// app.post('/search_weather', searchQuery.bind(this));
-		// app.post('/detail', detail.bind(this));
 
 		app.post('/search_weather', async (req, res) => {
 			console.log(this);
@@ -44,9 +18,8 @@ module.exports = class Api {
 			let response = this.searchCities(query);
 			if (response.then) {
 				response = await response;
-			} else {
-				res.status(200).json(response);
 			}
+			res.status(200).json(response);
 		});
 
 		app.post('/detail', async (req, res) => {
@@ -58,9 +31,13 @@ module.exports = class Api {
 			}
 			let response = this.weatherForCity(lon, lat);
 			if (response.then) {
+				res.status(200).json(await response);
 				response = await response;
+				console.log('awaited', response);
+			} else {
+				res.status(200).json(response);
 			}
-			res.status(200).json(response);
+
 		});
 
 		app.get('/weather_clear_cache', clearCache.bind(this));
@@ -84,7 +61,7 @@ module.exports = class Api {
 						results: result,
 						expiry: expiry
 					};
-					return this.cachedCitySearches[lowerCaseQuery];
+					return this.cachedCitySearches[lowerCaseQuery].results;
 				}.bind(this);
 				return fetch(weatherApiUrl + `geo/1.0/direct?q=${lowerCaseQuery}&limit=5&appid=${apiKey}`)
 					.then(res => res.json(JSON.parse))
@@ -116,7 +93,7 @@ module.exports = class Api {
 					result: result,
 					expiry: expiry
 				};
-				return this.cachedDetailQueries[lowerCaseQuery];
+				return this.cachedDetailQueries[lowerCaseQuery].result;
 			}.bind(this);
 			return fetch(weatherApiUrl + `/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`)
 				.then(res => res.json(JSON.parse))

@@ -6,7 +6,9 @@ function getJson(req) {
 		return {};
 	} else {
 		const json = req.json();
-		console.log("debugging", json);
+		if (json.then) {
+			return json.then();
+		}
 		return json;
 	}
 }
