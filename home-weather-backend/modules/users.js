@@ -13,7 +13,7 @@ module.exports = class UserCalls extends SourceJson {
 			//TODO: add check req structure?
 			users.push(req.body);
 			const result = { users: users };
-			await super.saveFile(result);
+			await super.saveFile(result); //not sure why this isn't committed correctly
 			res.status(200).json(result);
 		});
 
@@ -30,7 +30,7 @@ module.exports = class UserCalls extends SourceJson {
 			const index = users.findIndex(x => x.name === updatedUser.name);
 			users[index] = updatedUser;
 			const result = { users: users };
-			await super.saveFile(result);
+			await super.saveFile(result); //not sure why this isn't committed correctly
 			console.log(users[index]);
 			res.status(200).json(users[index]);
 		});
